@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-
+import {getCommonStyles, vpHeight, vpWidth} from "../../lib/CommonStyles"
 let style = StyleSheet.create({
   dateTouch: {
     width: 142
@@ -11,57 +11,48 @@ let style = StyleSheet.create({
     justifyContent: 'center'
   },
   dateIcon: {
-    width: 32,
-    height: 32,
-    marginLeft: 5,
-    marginRight: 5
+
   },
   dateInput: {
-    flex: 1,
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#aaa',
-    alignItems: 'center',
-    justifyContent: 'center'
+
   },
   dateText: {
-    color: '#333'
+    color: getCommonStyles().Colors.goldenrod,
+    fontSize:50,
   },
   placeholderText: {
-    color: '#c9c9c9'
+    color: getCommonStyles().Colors.goldenrod,
+    fontSize:50,
   },
   datePickerMask: {
     flex: 1,
     alignItems: 'flex-end',
     flexDirection: 'row',
-    backgroundColor: '#00000077'
+
   },
   datePickerCon: {
     backgroundColor: '#fff',
     height: 0,
     overflow: 'hidden'
   },
+
   btnText: {
-    position: 'absolute',
-    top: 0,
-    height: 42,
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  btnTextText: {
-    fontSize: 16,
-    color: '#46cf98'
-  },
-  btnTextCancel: {
-    color: '#666'
+    color:"white",
+    textAlign:"center",
+    justifyContent:"center",
+    fontSize:16,
+    fontFamily : "Montserrat-Regular",
   },
   btnCancel: {
     left: 0
   },
   btnConfirm: {
-    right: 0
+    position: "absolute",
+    top: 0,
+    height: getCommonStyles().signUp.blueWizardButtonHeight,
+    backgroundColor: getCommonStyles().Colors.azure,
+    width: vpWidth,
+    justifyContent:"center",
   },
   datePicker: {
     marginTop: 42,

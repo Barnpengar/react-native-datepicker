@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Style from './style';
 import Moment from 'moment';
-
+let self
 const FORMATS = {
   'date': 'YYYY-MM-DD',
   'datetime': 'YYYY-MM-DD HH:mm',
@@ -42,6 +42,7 @@ class DatePicker extends Component {
     this.onDatetimePicked = this.onDatetimePicked.bind(this);
     this.onDatetimeTimePicked = this.onDatetimeTimePicked.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
+    self = this
   }
 
   componentWillMount() {
@@ -50,7 +51,10 @@ class DatePicker extends Component {
       'Warning: Failed propType'
       // Other warnings you don't want like 'jsSchedulingOverhead',
     ];
+    if (this.props.openOnMount)
+      self.setModalVisible(true)
   }
+
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
@@ -111,11 +115,14 @@ class DatePicker extends Component {
   }
 
   getDateStr(date = this.props.date) {
-    if (date instanceof Date) {
-      return Moment(date).format(this.format);
-    } else {
-      return Moment(this.getDate(date)).format(this.format);
-    }
+    if (date instanceof Date)
+      return Moment(date).format(this.format)
+
+    if(this.props.agePicker)
+      return date
+    else
+      return Moment(this.getDate(date)).format(this.format)
+
   }
 
   datePicked() {
@@ -177,15 +184,12 @@ class DatePicker extends Component {
     }
 
     // reset state
-    this.setState({
-      date: this.getDate()
-    });
 
     if (Platform.OS === 'ios') {
       this.setModalVisible(true);
     } else {
 
-      // 选日期
+
       if (this.props.mode === 'date') {
         DatePickerAndroid.open({
           date: this.state.date,
@@ -193,7 +197,7 @@ class DatePicker extends Component {
           maxDate: this.props.maxDate && this.getDate(this.props.maxDate)
         }).then(this.onDatePicked);
       } else if (this.props.mode === 'time') {
-        // 选时间
+
 
         let timeMoment = Moment(this.state.date);
 
@@ -247,7 +251,7 @@ class DatePicker extends Component {
             <TouchableHighlight
               style={Style.datePickerMask}
               activeOpacity={1}
-              underlayColor={'#00000077'}
+              underlayColor={'transparent'}
               onPress={this.onPressCancel}
             >
               <TouchableHighlight
@@ -255,33 +259,23 @@ class DatePicker extends Component {
                 style={{flex: 1}}
               >
                 <Animated.View
-                  style={[Style.datePickerCon, {height: this.state.animatedHeight}, customStyles.datePickerCon]}
+                  style={[Style.datePickerCon, {height:this.state.animatedHeight}, customStyles.datePickerCon]}
                 >
                   <DatePickerIOS
                     date={this.state.date}
                     mode={this.props.mode}
                     minimumDate={this.props.minDate && this.getDate(this.props.minDate)}
                     maximumDate={this.props.maxDate && this.getDate(this.props.maxDate)}
-                    onDateChange={(date) => this.setState({date: date})}
+                    onDateChange={(date) => this.setDate(date)}
                     style={[Style.datePicker, customStyles.datePicker]}
                   />
+
                   <TouchableHighlight
-                    underlayColor={'transparent'}
-                    onPress={this.onPressCancel}
-                    style={[Style.btnText, Style.btnCancel, customStyles.btnCancel]}
-                  >
-                    <Text
-                      style={[Style.btnTextText, Style.btnTextCancel, customStyles.btnTextCancel]}
-                    >
-                      {this.props.cancelBtnText}
-                    </Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    underlayColor={'transparent'}
+                    underlayColor={"#06a0dc"}
                     onPress={this.onPressConfirm}
-                    style={[Style.btnText, Style.btnConfirm, customStyles.btnConfirm]}
+                    style={[Style.btnConfirm]}
                   >
-                    <Text style={[Style.btnTextText, customStyles.btnTextConfirm]}>{this.props.confirmBtnText}</Text>
+                    <Text style={[Style.btnText]}>{this.props.confirmBtnText}</Text>
                   </TouchableHighlight>
                 </Animated.View>
               </TouchableHighlight>
@@ -290,6 +284,10 @@ class DatePicker extends Component {
         </View>
       </TouchableHighlight>
     );
+  }
+  setDate(date) {
+    this.setState({date: date})
+    this.props.setScrollDate(date)
   }
 }
 
@@ -301,8 +299,8 @@ DatePicker.defaultProps = {
 
   // slide animation duration time, default to 300ms, IOS only
   duration: 300,
-  confirmBtnText: '确定',
-  cancelBtnText: '取消',
+  confirmBtnText: "",
+  cancelBtnText: "",
   iconSource: require('./date_icon.png'),
   customStyles: {},
 
@@ -326,7 +324,7 @@ DatePicker.propTypes = {
   showIcon: React.PropTypes.bool,
   disabled: React.PropTypes.bool,
   onDateChange: React.PropTypes.func,
-  placeholder: React.PropTypes.string
+  placeholder: React.PropTypes.any
 };
 
 export default DatePicker;
