@@ -33,7 +33,7 @@ let style = StyleSheet.create({
   datePickerCon: {
     backgroundColor: '#fff',
     height: 0,
-    overflow: 'hidden'
+
   },
 
   btnText: {
@@ -48,16 +48,21 @@ let style = StyleSheet.create({
   },
   btnConfirm: {
     position: "absolute",
-    top: 0,
+    top: -20,
     height: getCommonStyles().signUp.blueWizardButtonHeight,
     backgroundColor: getCommonStyles().Colors.azure,
     width: vpWidth,
     justifyContent:"center",
   },
+  notValid:{
+    backgroundColor: "#efefef",
+  },
+  notValidText:{
+    color:"rgb(195,195,195)"
+  },
   datePicker: {
     marginTop: 42,
-    borderTopColor: '#ccc',
-    borderTopWidth: 1
+
   },
   disabled: {
     backgroundColor: '#eee'
