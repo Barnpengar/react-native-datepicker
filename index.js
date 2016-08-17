@@ -57,10 +57,9 @@ class DatePicker extends Component {
 
 
   setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-
     // slide animation
     if (visible) {
+      this.setState({modalVisible: visible});
       Animated.timing(
         this.state.animatedHeight,
         {
@@ -69,9 +68,14 @@ class DatePicker extends Component {
         }
       ).start();
     } else {
-      this.setState({
-        animatedHeight: new Animated.Value(0)
-      });
+      Animated.timing(
+        this.state.animatedHeight,
+        {
+          toValue: 0,
+          duration: this.props.duration
+        }
+      ).start();
+      setTimeout(() => this.setState({modalVisible: visible}), this.props.duration)
     }
   }
 
@@ -187,7 +191,8 @@ class DatePicker extends Component {
 
     if (Platform.OS === 'ios') {
       this.setModalVisible(true);
-    } else {
+    }
+    else {
 
 
       if (this.props.mode === 'date') {
